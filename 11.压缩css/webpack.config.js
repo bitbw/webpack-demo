@@ -5,9 +5,9 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 // webpack v4 使用 optimize-css-assets-webpack-plugin
 // 对于webpack v5或更高版本，请改用css-minimizer-webpack-plugin。
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-process.env.NODE_ENV = 'development'
+process.env.NODE_ENV = 'production'
 module.exports = {
-  target: process.env.NODE_ENV == 'development' ? 'web' : 'browserslist',
+  // target: process.env.NODE_ENV == 'development' ? 'web' : 'browserslist',
   entry: "./src/index.js",
   output: {
     filename: "bundle.js",
@@ -79,7 +79,7 @@ module.exports = {
     minimizer: [
       // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
       // `...`,
-      new CssMinimizerPlugin(),
+      `...`, new CssMinimizerPlugin()
     ],
   },
 };

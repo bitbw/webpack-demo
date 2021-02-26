@@ -1,5 +1,6 @@
 const { resolve } = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+// 清理上次的打包文件
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 // 提取css文件为单独资源
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -34,6 +35,7 @@ const styleCommonLodar = [
     }
   }
 ];
+// 定义 nodejs 环境变量：决定使用 browserslist 的哪个环境
 module.exports = {
   entry: "./src/js/index.js",
   output: {
@@ -93,13 +95,15 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./src/index.html"
     }),
-    // 对输出的css文件进行重命名
+    //  单独css文件, 对输出的css文件进行重命名
     new MiniCssExtractPlugin({
       filename: "css/index.css"
     }),
     new CleanWebpackPlugin(),
     // eslint
+    // 当前工作目录下添加 .eslintignore 文件用于排除文件
     new ESLintPlugin({
+      // 格式化
       fix: true
     })
   ],

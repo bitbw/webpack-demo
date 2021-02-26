@@ -2,8 +2,9 @@ const { resolve } = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+// const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin')
 // webpack v4 使用 optimize-css-assets-webpack-plugin
-// 对于webpack v5或更高版本，请改用css-minimizer-webpack-plugin。
+// 对于webpack v5或更高版本，请改用css-minimizer-webpack-plugin。 https://github.com/NMFR/optimize-css-assets-webpack-plugin
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 process.env.NODE_ENV = 'production'
 module.exports = {
@@ -72,7 +73,8 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "css/index.css"
     }),
-    new CleanWebpackPlugin()
+    // new OptimizeCssAssetsWebpackPlugin(),
+    new CleanWebpackPlugin(),
   ],
   optimization: {
     minimize: true,

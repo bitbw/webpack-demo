@@ -23,6 +23,7 @@ const { resolve } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
+  target: 'web',
   entry: ['./src/js/index.js','./src/index.html'],
   output: {
     filename: 'js/built.js',
@@ -77,12 +78,12 @@ module.exports = {
   ],
   mode: 'development',
   devServer: {
-    contentBase: resolve(__dirname, 'dist'),
-    // 开启HMR功能
-    // 当修改了webpack配置，新配置要想生效，必须重新webpack服务
-    hot: true,
-    compress: true,
-    port: 3000,
-    open: true,
+    // contentBase: resolve(__dirname, 'dist'),
+    // // 开启HMR功能
+    // // 当修改了webpack配置，新配置要想生效，必须重新webpack服务
+    // hot: true,
+    // compress: true,
+    // port: 3000,
+    // open: true,
   }
 };

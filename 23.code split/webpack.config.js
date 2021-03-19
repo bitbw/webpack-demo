@@ -135,7 +135,7 @@ module.exports = {
       // 压缩css
       new CssMinimizerPlugin()
     ],
-    // 
+    // 代码块 切割
     splitChunks: {
       chunks: 'all'
     }

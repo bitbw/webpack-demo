@@ -1,13 +1,7 @@
 /**
  * /*
- *   tree shaking：去除无用代码
- *     前提：1. 必须使用ES6模块化  2. 开启production环境
- *     作用: 减少代码体积
- *
- *     在package.json中配置
- *       "sideEffects": false 所有代码都没有副作用（都可以进行tree shaking）
- *         问题：可能会把css / @babel/polyfill （副作用）文件干掉
- *       "sideEffects": ["*.css", "*.less"]
+ *   PWA: 渐进式网络开发应用程序(离线可访问)
+ *     workbox --> workbox-webpack-plugin
  *
  * @format
  */
@@ -22,6 +16,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 // eslint
 const ESLintPlugin = require('eslint-webpack-plugin');
+// pwa
+const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
+// 生成 PWA 的 manifest 文件
+const WebpackPwaManifest = require('webpack-pwa-manifest');
 // 公共样式 loader
 const styleCommonLodar = [
   {
@@ -50,6 +48,7 @@ const styleCommonLodar = [
   },
 ];
 // 定义 nodejs 环境变量：决定使用 browserslist 的哪个环境
+process.env.NODE_ENV = 'production';
 module.exports = {
   entry: './src/js/index.js',
   output: {
@@ -113,6 +112,41 @@ module.exports = {
     ],
   },
   plugins: [
+    new WorkboxWebpackPlugin.GenerateSW({
+      /*
+        1. 帮助serviceworker快速启动
+        2. 删除旧的 serviceworker
+
+        生成一个 serviceworker 配置文件~
+      */
+      clientsClaim: true,
+      skipWaiting: true,
+    }),
+    // 生成清单文件 manifest.json  的目的是将Web应用程序安装到设备的主屏幕 谷歌上会提示下载图标
+    // https://developer.mozilla.org/zh-CN/docs/Web/Manifest
+    new WebpackPwaManifest({
+      name: 'My Progressive Web App',
+      short_name: 'MyPWA',
+      description: 'My awesome Progressive Web App!',
+      background_color: '#ffffff',
+      // can be null, use-credentials or anonymous
+      crossorigin: 'use-credentials',
+      icons: [
+        {
+          src: resolve('src/assets/icon.png'),
+          sizes: [96, 128, 192, 256, 384, 512], // multiple sizes
+        },
+        {
+          src: resolve('src/assets/icon.png'),
+          size: '1024x1024', // you can also use the specifications pattern
+        },
+        {
+          src: resolve('src/assets/icon.png'),
+          size: '1024x1024',
+          purpose: 'maskable',
+        },
+      ],
+    }),
     new HtmlWebpackPlugin({
       template: './src/index.html',
     }),
@@ -136,8 +170,6 @@ module.exports = {
       new CssMinimizerPlugin(),
     ],
     // 代码块 切割
-    // 可以将node_modules中代码单独打包一个chunk最终输出 如果想分割node_modules中的代码需要配合dll
-    // 项目的中业务代码通过 import() 语法进行分割
     splitChunks: {
       chunks: 'all',
     },

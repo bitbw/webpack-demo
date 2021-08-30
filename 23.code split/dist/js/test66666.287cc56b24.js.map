@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./src/js/test.js"],"names":["mul","x","y","count"],"mappings":"yFAAO,SAASA,EAAIC,EAAGC,GACrB,OAAOD,EAAIC,EAGN,SAASC,EAAMF,EAAGC,GACvB,OAAOD,EAAIC,E","file":"js/test66666.287cc56b24.js","sourcesContent":["export function mul(x, y) {\n  return x * y;\n}\n\nexport function count(x, y) {\n  return x - y;\n}\n"],"sourceRoot":""}

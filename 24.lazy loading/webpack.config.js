@@ -1,14 +1,4 @@
 /**
- * /*
- *   tree shaking：去除无用代码
- *     前提：1. 必须使用ES6模块化  2. 开启production环境
- *     作用: 减少代码体积
- *
- *     在package.json中配置
- *       "sideEffects": false 所有代码都没有副作用（都可以进行tree shaking）
- *         问题：可能会把css / @babel/polyfill （副作用）文件干掉
- *       "sideEffects": ["*.css", "*.less"]
- *
  * @format
  */
 
@@ -22,6 +12,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 // eslint
 const ESLintPlugin = require('eslint-webpack-plugin');
+
 // 公共样式 loader
 const styleCommonLodar = [
   {
@@ -50,6 +41,7 @@ const styleCommonLodar = [
   },
 ];
 // 定义 nodejs 环境变量：决定使用 browserslist 的哪个环境
+process.env.NODE_ENV = 'production';
 module.exports = {
   entry: './src/js/index.js',
   output: {
@@ -136,8 +128,6 @@ module.exports = {
       new CssMinimizerPlugin(),
     ],
     // 代码块 切割
-    // 可以将node_modules中代码单独打包一个chunk最终输出 如果想分割node_modules中的代码需要配合dll
-    // 项目的中业务代码通过 import() 语法进行分割
     splitChunks: {
       chunks: 'all',
     },

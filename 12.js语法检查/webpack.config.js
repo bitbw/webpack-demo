@@ -1,17 +1,17 @@
-const { resolve } = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { resolve } = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 // mode 不会自动设置 process.env.NODE_ENV 需要手动处理
-process.env.NODE_ENV = "production"  
-console.log("Bowen: process.env.NODE_ENV", process.env.NODE_ENV)
+process.env.NODE_ENV = 'production';
+console.log('Bowen: process.env.NODE_ENV', process.env.NODE_ENV);
 module.exports = {
-  entry: "./src/js/index.js",
+  entry: './src/js/index.js',
   output: {
-    filename: "js/bundle.js",
-    path: resolve(__dirname, "dist")
+    filename: 'js/bundle.js',
+    path: resolve(__dirname, 'dist'),
   },
-  mode: "development",
-    /*
+  mode: 'development',
+  /*
     语法检查： eslint-loader  eslint
       注意：只检查自己写的源代码，第三方的库是不用检查的
       设置检查规则：
@@ -31,14 +31,14 @@ module.exports = {
       //     fix: true
       //   }
       // }
-    ]
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./src/index.html"
+      template: './src/index.html',
     }),
     new ESLintPlugin({
       fix: true,
-    })
-  ]
+    }),
+  ],
 };

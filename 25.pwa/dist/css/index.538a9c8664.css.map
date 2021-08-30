@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./src/css/index.css"],"names":[],"mappings":"AAAA,UAEE,QAAS,CACT,SAAU,CACV,WAAY,CACZ,wBACF","file":"css/index.538a9c8664.css","sourcesContent":["html,\r\nbody {\r\n  margin: 0;\r\n  padding: 0;\r\n  height: 100%;\r\n  background-color: deeppink;\r\n}"],"sourceRoot":""}

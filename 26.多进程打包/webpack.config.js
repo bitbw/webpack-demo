@@ -1,153 +1,157 @@
+/**
+ * 多进程打包
+ *
+ * @format
+ */
+
 const { resolve } = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
-
-/*
-  PWA: 渐进式网络开发应用程序(离线可访问)
-    workbox --> workbox-webpack-plugin
-*/
-
-// 定义nodejs环境变量：决定使用browserslist的哪个环境
-process.env.NODE_ENV = 'production';
-
-// 复用loader
-const commonCssLoader = [
-  MiniCssExtractPlugin.loader,
+// 清理上次的打包文件
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+// 提取css文件为单独资源
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// 压缩css
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+// eslint
+const ESLintPlugin = require('eslint-webpack-plugin');
+// 公共样式 loader
+const styleCommonLodar = [
+  {
+    loader: MiniCssExtractPlugin.loader,
+    // 单独设置 相对与css文件的公共路径
+    options: {
+      publicPath: '../',
+    },
+  },
   'css-loader',
   {
-    // 还需要在package.json中定义browserslist
     loader: 'postcss-loader',
     options: {
-      ident: 'postcss',
-      plugins: () => [require('postcss-preset-env')()]
-    }
-  }
+      postcssOptions: {
+        plugins: [
+          [
+            'postcss-preset-env',
+            {
+              // Options
+            },
+          ],
+          // 或者 require("postcss-preset-env")()
+        ],
+      },
+    },
+  },
 ];
-
+// 定义 nodejs 环境变量：决定使用 browserslist 的哪个环境
+process.env.NODE_ENV = 'production';
 module.exports = {
   entry: './src/js/index.js',
   output: {
-    filename: 'js/built.[contenthash:10].js',
-    path: resolve(__dirname, 'build')
+    filename: 'js/[name].[contenthash:10].js',
+    path: resolve(__dirname, 'dist'),
+    // 相当于与 index.html 文件的公共路径
+    publicPath: './',
   },
+  mode: 'production',
   module: {
     rules: [
       {
-        // 在package.json中eslintConfig --> airbnb
-        test: /\.js$/,
-        exclude: /node_modules/,
-        // 优先执行
-        enforce: 'pre',
-        loader: 'eslint-loader',
-        options: {
-          fix: true
-        }
-      },
-      {
-        // 以下loader只会匹配一个
-        // 注意：不能有两个配置处理同一种类型文件
         oneOf: [
           {
             test: /\.css$/,
-            use: [...commonCssLoader]
+            use: styleCommonLodar,
           },
           {
             test: /\.less$/,
-            use: [...commonCssLoader, 'less-loader']
+            use: [...styleCommonLodar, 'less-loader'],
           },
-          /*
-            正常来讲，一个文件只能被一个loader处理。
-            当一个文件要被多个loader处理，那么一定要指定loader执行的先后顺序：
-              先执行eslint 在执行babel
-          */
           {
             test: /\.js$/,
             exclude: /node_modules/,
             use: [
-              /* 
-                开启多进程打包。 
+              /*
+                开启多进程打包
                 进程启动大概为600ms，进程通信也有开销。
                 只有工作消耗时间比较长，才需要多进程打包
               */
               {
                 loader: 'thread-loader',
+                // 有同样配置的 loader 会共享一个 worker 池
                 options: {
-                  workers: 2 // 进程2个
-                }
+                  // 产生的 worker 的数量，默认是 (cpu 核心数 - 1)，或者，
+                  // 在 require('os').cpus() 是 undefined 时回退至 1
+                  workers: 2,
+                },
               },
               {
                 loader: 'babel-loader',
                 options: {
-                  presets: [
-                    [
-                      '@babel/preset-env',
-                      {
-                        useBuiltIns: 'usage',
-                        corejs: { version: 3 },
-                        targets: {
-                          chrome: '60',
-                          firefox: '50'
-                        }
-                      }
-                    ]
-                  ],
                   // 开启babel缓存
                   // 第二次构建时，会读取之前的缓存
-                  cacheDirectory: true
-                }
-              }
-            ]
+                  cacheDirectory: true,
+                  // 需要配置 rootMode: "upward" 意思是向上查找 找到 babel.config.[json | js]
+                  // presets 在 babel.config中
+                  rootMode: 'upward',
+                },
+              },
+            ],
           },
+          // 处理图片资源
           {
-            test: /\.(jpg|png|gif)/,
+            test: /\.(jpg|png|gif)$/,
             loader: 'url-loader',
             options: {
               limit: 8 * 1024,
               name: '[hash:10].[ext]',
-              outputPath: 'imgs',
-              esModule: false
-            }
+              // 关闭es6模块化
+              // esModule: false,
+              outputPath: 'assets/img',
+            },
           },
+          // 处理html中img资源
           {
             test: /\.html$/,
-            loader: 'html-loader'
+            loader: 'html-loader',
           },
+          // 处理其他资源
           {
-            exclude: /\.(js|css|less|html|jpg|png|gif)/,
+            exclude: /\.(html|js|css|less|jpg|png|gif)/,
             loader: 'file-loader',
             options: {
-              outputPath: 'media'
-            }
-          }
-        ]
-      }
-    ]
+              name: '[hash:10].[ext]',
+              outputPath: 'assets/font',
+            },
+          },
+        ],
+      },
+    ],
   },
   plugins: [
-    new MiniCssExtractPlugin({
-      filename: 'css/built.[contenthash:10].css'
-    }),
-    new OptimizeCssAssetsWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: './src/index.html',
-      minify: {
-        collapseWhitespace: true,
-        removeComments: true
-      }
     }),
-    new WorkboxWebpackPlugin.GenerateSW({
-      /*
-        1. 帮助serviceworker快速启动
-        2. 删除旧的 serviceworker
-
-        生成一个 serviceworker 配置文件~
-      */
-      clientsClaim: true,
-      skipWaiting: true
-    })
+    //  单独css文件, 对输出的css文件进行重命名
+    new MiniCssExtractPlugin({
+      filename: 'css/index.[contenthash:10].css',
+    }),
+    new CleanWebpackPlugin(),
+    // eslint
+    // 当前工作目录下添加 .eslintignore 文件用于排除文件
+    new ESLintPlugin({
+      // 格式化
+      fix: true,
+    }),
   ],
-  mode: 'production',
-  devtool: 'source-map'
+  optimization: {
+    // 压缩
+    minimize: true,
+    minimizer: [
+      // 压缩css
+      new CssMinimizerPlugin(),
+    ],
+    // 代码块 切割
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
+  devtool: 'source-map',
 };

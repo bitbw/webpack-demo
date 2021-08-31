@@ -134,6 +134,8 @@ module.exports = {
     minimizer: [
       // 压缩css
       new CssMinimizerPlugin(),
+      // '...' 来访问默认值 去除了js就不压缩了
+      '...',
     ],
     // 代码块 切割
     // 可以将node_modules中代码单独打包一个chunk最终输出 如果想分割node_modules中的代码需要配合dll

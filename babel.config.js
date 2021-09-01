@@ -1,3 +1,5 @@
+/** @format */
+
 module.exports = {
   // 预设：指示 babel 做怎么样的兼容性处理
   presets: [
@@ -8,7 +10,7 @@ module.exports = {
         useBuiltIns: 'usage',
         // 指定core-js版本
         corejs: {
-          version: 3
+          version: 3,
         },
         // 指定兼容性做到哪个版本浏览器
         targets: {
@@ -16,9 +18,9 @@ module.exports = {
           firefox: '60',
           ie: '9',
           safari: '10',
-          edge: '17'
-        }
-      }
-    ]
-  ]
+          edge: '17',
+        },
+      },
+    ],
+  ],
 };

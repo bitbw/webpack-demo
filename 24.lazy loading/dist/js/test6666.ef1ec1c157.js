@@ -1,0 +1,2 @@
+(self.webpackChunk=self.webpackChunk||[]).push([[420],{1440:function(n,u,t){"use strict";function e(n,u){return n*u}function c(n,u){return n-u}t.r(u),t.d(u,{mul:function(){return e},count:function(){return c}}),console.log("test.js文件被加载了~")}}]);
+//# sourceMappingURL=test6666.ef1ec1c157.js.map

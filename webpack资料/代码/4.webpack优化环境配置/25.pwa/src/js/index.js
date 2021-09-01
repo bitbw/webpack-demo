@@ -1,3 +1,5 @@
+/** @format */
+
 import { mul } from './test';
 import '../css/index.css';
 

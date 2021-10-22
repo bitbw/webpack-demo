@@ -25,7 +25,8 @@ module.exports = {
               // 小于8kb的以base64位插入 data:image/jpeg;base64,/9j
               // 大于8kb的以改为hash值为名称的原文件插入 
               limit: 8 * 1024,
-              esModule: false,
+              // esModule: false,
+              name:'[hash:10].[ext]'
             }
           }
         ]
@@ -41,5 +42,16 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./index.html"
     })
-  ]
+  ],
+  devServer: {
+    // 项目构建后路径
+    contentBase: resolve(__dirname, 'dist'),
+    // 启动gzip压缩
+    compress: true,
+    // 端口号
+    port: 3000,
+    host: '192.168.1.7',
+    // 自动打开浏览器
+    open: true
+  }
 };

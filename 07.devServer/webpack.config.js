@@ -17,8 +17,10 @@ module.exports = {
       {
         // 排除css|js|html|less 结尾的文件
         exclude: /\.(css|js|html|less)$/,
-        use: ["file-loader"],
-        name:"[hash:10]"
+        loader: "file-loader",
+        options:{
+          name:'[hash:8].[ext]'
+        }
       }
     ]
   },
@@ -27,5 +29,17 @@ module.exports = {
       template: "./src/index.html"
     })
   ],
-
+  // 开发服务器 devServer：用来自动化（自动编译，自动打开浏览器，自动刷新浏览器~~）
+  // 特点：只会在内存中编译打包，不会有任何输出
+  // 启动devServer指令为：npx webpack-dev-server
+  devServer: {
+    // 项目构建后路径
+    contentBase: path.resolve(__dirname, 'build'),
+    // 启动gzip压缩
+    compress: true,
+    // 端口号
+    port: 3000,
+    // 自动打开浏览器
+    open: true
+  }
 };

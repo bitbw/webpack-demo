@@ -31,8 +31,12 @@ class CopyWebpackPlugin {
   }
   async hanleCopy() {
     debugger;
-    let { form, ignore, to = '.' } = this.options;
-    console.log("Bowen ~ file: CopyWebpackPlugin.js ~ line 35 ~ CopyWebpackPlugin ~ hanleCopy ~ to", to)
+    let { from, ignore, to = '.' } = this.options;
+    console.log('Bowen: CopyWebpackPlugin -> hanleCopy -> from', from);
+    console.log(
+      'Bowen ~ file: CopyWebpackPlugin.js ~ line 35 ~ CopyWebpackPlugin ~ hanleCopy ~ to',
+      to,
+    );
     const context = this.compiler.options.context; // process.cwd()
     console.log(
       'Bowen ~ file: CopyWebpackPlugin.js ~ line 30 ~ CopyWebpackPlugin ~ hanleCopy ~ process.cwd()',
@@ -42,12 +46,15 @@ class CopyWebpackPlugin {
       'Bowen ~ file: CopyWebpackPlugin.js ~ line 29 ~ CopyWebpackPlugin ~ hanleCopy ~ context',
       context,
     );
-    // 判断是 form 否为绝对路径
-    form = path.isAbsolute(form) ? form : path.resolve(process.cwd(), form);
-    // 1. 获取 form 文件列表
-    let files = await globby(form, {
+    // 判断是 from 否为绝对路径
+    from = path.isAbsolute(from) ? from : path.resolve(process.cwd(), from);
+    // window 下有路径问题
+    from = from.replace(/\\/g, '/');
+    // 1. 获取 from 文件列表
+    let files = await globby(from, {
       ignore,
     });
+    console.log('Bowen: CopyWebpackPlugin -> hanleCopy -> files', files);
     for (const file of files) {
       // 2. 读取文件
       let filename = path.join(to, path.basename(file));

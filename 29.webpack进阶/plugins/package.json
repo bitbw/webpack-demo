@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
-    "dev": "node --inspect-brk ./node_modules/webpack/bin/webpack.js"
+    "build": "node ./script/build.js",
+    "dev": "node --inspect-brk ./script/build.js"
   },
   "keywords": [],
   "author": "",

@@ -5,7 +5,7 @@ const globby = require('globby');
 // import { globby } from 'globby';
 
 (async () => {
-  let files = await globby('./public',{
+  let files = await globby('C:/test/my-webpack/webpack-demo/29.webpack进阶/plugins/public',{
       ignore:["*/index.html"]
   });
   console.log('Bowen ~ file: globbyTest.js ~ line 6 ~ files', files);

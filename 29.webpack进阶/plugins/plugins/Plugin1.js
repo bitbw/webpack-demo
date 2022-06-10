@@ -1,5 +1,5 @@
 /** @format */
-//  compiler 钩子体验 
+//  compiler 钩子体验
 class Plugin1 {
   //  Plugin 添加订阅(tap) 由 webpack 调用 (call)
   apply(compiler) {

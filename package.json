@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "update": "git add . && git commit -m 'update' && git push",
+    "preupdate": "git add . ",
+    "update": "git commit -m",
+    "postupdate": "git pull && git push",
     "web1": "npx webpack ./29.webpack进阶loader/webpack.config.js"
   },
   "keywords": [],

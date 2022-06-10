@@ -11,7 +11,7 @@
 const parse = require('./parse');
 const fs = require('fs').promises;
 const path = require('path');
-
+const { transformAsync } = require('@babel/core');
 class Complier {
   constructor(options) {
     this.options = options;
@@ -59,7 +59,7 @@ class Complier {
     };
   }
   async generate(depsGraph) {
-    const bundle = `
+    let bundle = `
 (function (depsGraph) {
     // 这个作为上级作用域的  require  主要作用执行 code
     function require(absolutePath) {
@@ -80,12 +80,26 @@ class Complier {
         eval(code);
     })(loacalRequire, exports, depsGraph[absolutePath].code);
     // 暴露对象 
+    console.log("exports",exports)
     return exports
     }
     // 传入入口路径
     require('${this.options.entry}');
 })(${JSON.stringify(depsGraph)});
     `;
+    // 打包优化
+    const { code } = await transformAsync(bundle, {
+      // sourceMap
+      sourceMaps: "both",
+      sourceFileName: 'main.map.js',
+      sourceRoot: './',
+      // 去注释
+      comments: false,
+      // 去空格
+      // compact: true,
+      minified: true,
+    });
+    bundle = code;
     // 生成文件
     const { output } = this.options;
     try {

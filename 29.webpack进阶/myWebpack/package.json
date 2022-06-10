@@ -6,6 +6,7 @@
   "scripts": {
     "build": "node ./script/build.js"
   },
+  "browserslist": "> 0.25%, not dead",
   "keywords": [],
   "author": "",
   "license": "ISC",

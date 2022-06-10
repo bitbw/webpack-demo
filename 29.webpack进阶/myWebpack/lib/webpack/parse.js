@@ -36,7 +36,6 @@ const parse = {
         const absolutePath = path.resolve(entryPath, relativePath);
         // 收集依赖
         deps[relativePath] = absolutePath;
-
       },
     });
 
@@ -64,5 +63,4 @@ const parse = {
   },
 };
 
-
-module.exports = parse
+module.exports = parse;
